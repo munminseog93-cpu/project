@@ -1,37 +1,35 @@
-import webbrowser
-import os
-
-html_content = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Smart Queue</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-    body{background:#F8F9FA;font-family:-apple-system,sans-serif;margin:0;display:flex;justify-content:center}
-    .app{width:100%;max-width:440px;background:white;min-height:100vh;box-shadow:0 0 15px rgba(0,0,0,0.1)}
-    .hdr{background:#2C3E50;color:white;padding:15px 20px;display:flex;justify-content:space-between;align-items:center}
-    .lang-sel{padding:5px;border-radius:4px;font-size:14px;border:none;background:#fff;color:#333;font-weight:bold;outline:none;cursor:pointer}
-    .card{border:1px solid #ddd;border-radius:12px;padding:16px;margin:16px}
-    .btn{background:#2C3E50;color:white;width:100%;padding:15px;border:none;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer}
-    .place{padding:12px;border:1px solid #eee;border-radius:8px;margin-bottom:10px;cursor:pointer;background:#fcfcfc}
-    .place-title{font-weight:bold;display:flex;justify-content:space-between;align-items:center}
-    .detail{display:none;margin-top:10px;padding-top:10px;border-top:1px dashed #ccc;font-size:14px;color:#333;line-height:1.5;background:#fff}
-    .detail.active{display:block}
-    .badge{padding:4px 8px;border-radius:4px;font-size:12px}
-    .green{background:#d4edda;color:#155724}
-    .yellow{background:#fff3cd;color:#856404}
-    .red{background:#f8d7da;color:#721c24}
-    #map{height:250px;width:100%;border-radius:8px;margin:10px 0;z-index:1}
+    * { box-sizing: border-box; }
+    body { background: #F8F9FA; font-family: -apple-system, sans-serif; margin: 0; padding: 0; width: 100vw; overflow-x: hidden; }
+    .app { width: 100%; min-height: 100vh; background: white; margin: 0; padding: 0; }
+    .hdr { background: #2C3E50; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; width: 100%; }
+    .lang-sel { padding: 5px; border-radius: 4px; font-size: 14px; border: none; background: #fff; color: #333; font-weight: bold; outline: none; cursor: pointer; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; margin: 16px; }
+    .btn { background: #2C3E50; color: white; width: 100%; padding: 15px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
+    .place { padding: 12px; border: 1px solid #eee; border-radius: 8px; margin-bottom: 10px; cursor: pointer; background: #fcfcfc; }
+    .place-title { font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+    .detail { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #ccc; font-size: 14px; color: #333; line-height: 1.5; background: #fff; }
+    .detail.active { display: block; }
+    .badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+    .green { background: #d4edda; color: #155724; }
+    .yellow { background: #fff3cd; color: #856404; }
+    .red { background: #f8d7da; color: #721c24; }
+    #map { height: 250px; width: 100%; border-radius: 8px; margin: 10px 0; z-index: 1; }
 </style>
 </head>
 <body>
 <div class="app">
     <div class="hdr">
         <h3 id="t_title" style="margin:0">📱 스마트 대기</h3>
-        <select id="lang" class="lang-sel" onchange="chg()">
+        <select id="lang" class="lang-sel" onchange="chgLang()">
             <option value="ko">🇰🇷 한국어</option>
             <option value="en">🇺🇸 English</option>
             <option value="ja">🇯🇵 日本語</option>
@@ -53,81 +51,122 @@ html_content = """<!DOCTYPE html>
 </div>
 
 <script>
-const d={
-    ko:{
-        t_title:"📱 스마트 대기",
-        t_loc_title:"📍 현재 위치 상세: 경복궁",
-        t_loc_desc:"1395년 창건된 조선 왕조의 법궁입니다. '큰 복을 누리며 번성하라'는 의미를 지니며, 임진왜란 때 전소된 후 1867년 중건되었습니다.",
-        t_status:"현재 게이트 입장이 일시 제한되었습니다.",
-        t_btn:"대기순서 발급하기",
-        t_map_title:"🗺️ 주변 명소 지도 및 혼잡도",
-        locs:["경복궁 (현재위치)","국립현대미술관","서촌 마을","북촌 한옥마을","광화문 광장"],
-        places:[
-            {n:"국립현대미술관 (도보 7분)",s:"여유",c:"green",d:"현대미술 전시관.<br>🚶 경로: 동문 출구 -> 삼청동 방면 400m"},
-            {n:"서촌 마을 (도보 10분)",s:"여유",c:"green",d:"조선시대 중인 거주지.<br>🚶 경로: 서문 출구 -> 통의동 방면"},
-            {n:"북촌 한옥마을 (도보 15분)",s:"보통",c:"yellow",d:"전통 거주지.<br>🚶 경로: 광화문 삼거리 -> 북쪽 800m"},
-            {n:"광화문 광장 (도보 5분)",s:"혼잡",c:"red",d:"중심 광장.<br>🚶 경로: 남문 출구 -> 남쪽 300m"}
+const d = {
+    ko: {
+        t_title: "📱 스마트 대기",
+        t_loc_title: "📍 현재 위치 상세: 경복궁",
+        t_loc_desc: "1395년 창건된 조선 왕조의 법궁입니다. '큰 복을 누리며 번성하라'는 의미를 지니며, 임진왜란 때 전소된 후 1867년 중건되었습니다.",
+        t_status: "현재 게이트 입장이 일시 제한되었습니다.",
+        t_btn: "대기순서 발급하기",
+        t_map_title: "🗺️ 주변 명소 지도 및 혼잡도",
+        locs: ["경복궁 (현재위치)", "국립현대미술관", "서촌 마을", "북촌 한옥마을", "광화문 광장"],
+        places: [
+            {n: "국립현대미술관 (도보 7분)", s: "여유", c: "green", d: "현대미술 전시관.<br>🚶 경로: 동문 출구 -> 삼청동 방면 400m"},
+            {n: "서촌 마을 (도보 10분)", s: "여유", c: "green", d: "조선시대 중인 거주지.<br>🚶 경로: 서문 출구 -> 통의동 방면"},
+            {n: "북촌 한옥마을 (도보 15분)", s: "보통", c: "yellow", d: "전통 거주지.<br>🚶 경로: 광화문 삼거리 -> 북쪽 800m"},
+            {n: "광화문 광장 (도보 5분)", s: "혼잡", c: "red", d: "중심 광장.<br>🚶 경로: 남문 출구 -> 남쪽 300m"}
         ],
-        issued:"<p>나의 대기 번호</p><h1 style='color:#2C3E50;font-size:40px;margin:10px 0'>A-{N}</h1><p>내 앞 대기: 18팀 (예상 36분)</p>"
+        issued: "<p>나의 대기 번호</p><h1 style='color:#2C3E50;font-size:40px;margin:10px 0'>A-{N}</h1><p>내 앞 대기: 18팀 (예상 36분)</p>",
+        badge_free: "여유", badge_normal: "보통", badge_crowded: "혼잡"
+    },
+    en: {
+        t_title: "📱 Smart Queue",
+        t_loc_title: "📍 Current Location: Gyeongbokgung",
+        t_loc_desc: "The main royal palace of the Joseon Dynasty, built in 1395. It means 'great blessings and prosperity', and was rebuilt in 1867 after being destroyed during the Imjin War.",
+        t_status: "Gate entry is currently restricted.",
+        t_btn: "Get Queue Ticket",
+        t_map_title: "🗺️ Nearby Attractions & Congestion",
+        locs: ["Gyeongbokgung (Current)", "National Museum of Modern Art", "Seochon Village", "Bukchon Hanok Village", "Gwanghwamun Square"],
+        places: [
+            {n: "National Museum of Modern Art (7 min walk)", s: "Relaxed", c: "green", d: "Modern art exhibition hall.<br>🚶 Route: East Gate -> Samcheong-dong 400m"},
+            {n: "Seochon Village (10 min walk)", s: "Relaxed", c: "green", d: "Joseon-era residential area.<br>🚶 Route: West Gate -> Tongin-dong direction"},
+            {n: "Bukchon Hanok Village (15 min walk)", s: "Normal", c: "yellow", d: "Traditional residential area.<br>🚶 Route: Gwanghwamun Intersection -> North 800m"},
+            {n: "Gwanghwamun Square (5 min walk)", s: "Crowded", c: "red", d: "Central public square.<br>🚶 Route: South Gate -> South 300m"}
+        ],
+        issued: "<p>My Queue Number</p><h1 style='color:#2C3E50;font-size:40px;margin:10px 0'>A-{N}</h1><p>Ahead in line: 18 teams (Est. 36 mins)</p>",
+        badge_free: "Relaxed", badge_normal: "Normal", badge_crowded: "Crowded"
+    },
+    ja: {
+        t_title: "📱 スマート待ち時間",
+        t_loc_title: "📍 現在地の詳細: 景福宮",
+        t_loc_desc: "1395年に創建された朝鮮王朝の法宮です。「大きな福を享受し繁栄するように」という意味を持ち、文禄・慶長の役で焼失後、1867年に再建されました。",
+        t_status: "現在、ゲートの入場が一時制限されています。",
+        t_btn: "整理券を発行する",
+        t_map_title: "🗺️ 周辺スポットの地図と混雑度",
+        locs: ["景福宮 (現在地)", "国立現代美術館", "西村マウル", "北村韓屋マウル", "光化門広場"],
+        places: [
+            {n: "国立現代美術館 (徒歩7分)", s: "余裕", c: "green", d: "現代美術展示館。<br>🚶 経路: 東門出口 -> 三清洞方面 400m"},
+            {n: "西村マウル (徒歩10分)", s: "余裕", c: "green", d: "朝鮮時代の一般住民の居住地。<br>🚶 経路: 西門出口 -> 通仁洞方面"},
+            {n: "北村韓屋マウル (徒歩15分)", s: "普通", c: "yellow", d: "伝統的な居住地。<br>🚶 経路: 光化門三叉路 -> 北へ800m"},
+            {n: "光化門広場 (徒歩5分)", s: "混雑", c: "red", d: "中心広場。<br>🚶 経路: 南門出口 -> 南へ300m"}
+        ],
+        issued: "<p>私の待ち番号</p><h1 style='color:#2C3E50;font-size:40px;margin:10px 0'>A-{N}</h1><p>前の待ち組: 18チーム (予想 36分)</p>",
+        badge_free: "余裕", badge_normal: "普通", badge_crowded: "混雑"
     }
 };
 
-let cur='ko', tkt=0, map, mks=[];
+let cur = 'ko', tkt = 0, map, mks = [];
 
-function initMap(){
-    map=L.map('map').setView([37.577, 126.976], 14);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{attribution:'&copy; CARTO'}).addTo(map);
+function initMap() {
+    map = L.map('map').setView([37.577, 126.976], 14);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {attribution: '&copy; CARTO'}).addTo(map);
     updMks();
 }
 
-function updMks(){
-    mks.forEach(m=>map.removeLayer(m));
-    mks=[];
-    const lcs=[
-        {lat:37.5796,lng:126.9770,t:d[cur].locs[0],c:"🔴"},
-        {lat:37.5786,lng:126.9802,t:d[cur].locs[1],c:"🟢"},
-        {lat:37.5808,lng:126.9696,t:d[cur].locs[2],c:"🟢"},
-        {lat:37.5826,lng:126.9831,t:d[cur].locs[3],c:"🟡"},
-        {lat:37.5714,lng:126.9773,t:d[cur].locs[4],c:"🔴"}
+function updMks() {
+    mks.forEach(m => map.removeLayer(m));
+    mks = [];
+    const lcs = [
+        {lat: 37.5796, lng: 126.9770, t: d[cur].locs[0], c: "🔴"},
+        {lat: 37.5786, lng: 126.9802, t: d[cur].locs[1], c: "🟢"},
+        {lat: 37.5808, lng: 126.9696, t: d[cur].locs[2], c: "🟢"},
+        {lat: 37.5826, lng: 126.9831, t: d[cur].locs[3], c: "🟡"},
+        {lat: 37.5714, lng: 126.9773, t: d[cur].locs[4], c: "🔴"}
     ];
-    lcs.forEach(l=>{
-        let ic=L.divIcon({html:'<div style="font-size:20px;text-align:center">'+l.c+'</div>',className:'',iconSize:[24,24],iconAnchor:[12,12]});
-        let m=L.marker([l.lat,l.lng],{icon:ic}).bindPopup('<b>'+l.t+'</b>').addTo(map);
+    lcs.forEach(l => {
+        let ic = L.divIcon({html: '<div style="font-size:20px;text-align:center">' + l.c + '</div>', className: '', iconSize: [24, 24], iconAnchor: [12, 12]});
+        let m = L.marker([l.lat, l.lng], {icon: ic}).bindPopup('<b>' + l.t + '</b>').addTo(map);
         mks.push(m);
     });
 }
 
-function rnd(){
-    document.getElementById('places').innerHTML=d[cur].places.map((p)=>
-        '<div class="place" onclick="t(this)"><div class="place-title"><span>'+p.n+'</span><span class="badge '+p.c+'">'+p.s+'</span></div><div class="detail">'+p.d+'</div></div>'
+function rnd() {
+    document.getElementById('places').innerHTML = d[cur].places.map((p) =>
+        '<div class="place" onclick="toggleDetail(this)"><div class="place-title"><span>' + p.n + '</span><span class="badge ' + p.c + '">' + p.s + '</span></div><div class="detail">' + p.d + '</div></div>'
     ).join('');
 }
 
-function iss(){
-    tkt=Math.floor(Math.random()*50)+100;
-    document.getElementById('box').innerHTML=d[cur].issued.replace('{N}',tkt);
+function iss() {
+    tkt = Math.floor(Math.random() * 50) + 100;
+    document.getElementById('box').innerHTML = d[cur].issued.replace('{N}', tkt);
 }
 
-function t(el){
-    let dt=el.querySelector('.detail');
-    let act=dt.classList.contains('active');
-    document.querySelectorAll('.detail').forEach(e=>e.classList.remove('active'));
-    if(!act) dt.classList.add('active');
+function toggleDetail(el) {
+    let dt = el.querySelector('.detail');
+    let act = dt.classList.contains('active');
+    document.querySelectorAll('.detail').forEach(e => e.classList.remove('active'));
+    if (!act) dt.classList.add('active');
 }
 
-window.onload=function(){
+function chgLang() {
+    cur = document.getElementById('lang').value;
+    const text = d[cur];
+    
+    document.getElementById('t_title').innerText = text.t_title;
+    document.getElementById('t_loc_title').innerText = text.t_loc_title;
+    document.getElementById('t_loc_desc').innerText = text.t_loc_desc;
+    document.getElementById('t_status').innerText = text.t_status;
+    document.getElementById('t_btn').innerText = text.t_btn;
+    document.getElementById('t_map_title').innerText = text.t_map_title;
+    
+    rnd();
+    updMks();
+}
+
+window.onload = function() {
     rnd();
     initMap();
 };
 </script>
 </body>
 </html>
-"""
-
-# 파이썬이 실행되면서 임시 HTML 파일을 만들고 브라우저를 띄움
-file_name = "temp_smart_queue.html"
-with open(file_name, "w", encoding="utf-8") as f:
-    f.write(html_content)
-
-webbrowser.open("file://" + os.path.realpath(file_name))
-print("지도가 포함된 스마트 대기 프로그램이 실행되었습니다!")
