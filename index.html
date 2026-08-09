@@ -61,10 +61,10 @@ const d = {
         t_map_title: "🗺️ 주변 명소 지도 및 혼잡도",
         locs: ["경복궁 (현재위치)", "국립현대미술관", "서촌 마을", "북촌 한옥마을", "광화문 광장"],
         places: [
-            {n: "국립현대미술관 (도보 7분)", s: "여유", c: "green", d: "현대미술 전시관.<br>🚶 경로: 동문 출구 -> 삼청동 방면 400m"},
-            {n: "서촌 마을 (도보 10분)", s: "여유", c: "green", d: "조선시대 중인 거주지.<br>🚶 경로: 서문 출구 -> 통의동 방면"},
-            {n: "북촌 한옥마을 (도보 15분)", s: "보통", c: "yellow", d: "전통 거주지.<br>🚶 경로: 광화문 삼거리 -> 북쪽 800m"},
-            {n: "광화문 광장 (도보 5분)", s: "혼잡", c: "red", d: "중심 광장.<br>🚶 경로: 남문 출구 -> 남쪽 300m"}
+            {n: "국립현대미술관 (도보 7분)", s: "여유", c: "green", d: "도심 속에서 다양한 동시대 현대미술 작품과 전시를 관람할 수 있는 문화 예술 공간입니다.<br>🚶 경로: 경복궁 동문 출구로 나와 삼청동 방면으로 약 400m 직진 후 우측 위치."},
+            {n: "서촌 마을 (도보 10분)", s: "여유", c: "green", d: "조선시대 중인들이 거주하던 역사 깊은 동네로, 아기자기한 골목길과 개성 있는 카페, 예술가들의 흔적이 가득합니다.<br>🚶 경로: 경복궁 서문 출구로 나와 통의동 우체국 방면으로 횡단보도 건너 골목 진입."},
+            {n: "북촌 한옥마을 (도보 15분)", s: "보통", c: "yellow", d: "전통 가옥인 한옥이 고스란히 보존되어 있어 한국 전통의 아름다운 정취와 멋진 도심 속 풍경을 만끽할 수 있는 명소입니다.<br>🚶 경로: 광화문 삼거리에서 동쪽 방향으로 건너 북쪽 언덕길 방면으로 약 800m 이동."},
+            {n: "광화문 광장 (도보 5분)", s: "혼잡", c: "red", d: "세종대왕 동상과 이순신 장군 동상이 위치하며, 서울의 역사와 문화를 상징하는 넓고 탁 트인 도심 속 대표 광장입니다.<br>🚶 경로: 경복궁 남문(광화문) 출구로 나와 광장 방면으로 남쪽 방향 300m 직진."}
         ],
         issued: "<p>나의 대기 번호</p><h1 style='color:#2C3E50;font-size:40px;margin:10px 0'>A-{N}</h1><p>내 앞 대기: {T}팀 (예상 {M}분)</p>",
         badge_free: "여유", badge_normal: "보통", badge_crowded: "혼잡"
@@ -78,10 +78,10 @@ const d = {
         t_map_title: "🗺️ Nearby Attractions & Congestion",
         locs: ["Gyeongbokgung (Current)", "National Museum of Modern Art", "Seochon Village", "Bukchon Hanok Village", "Gwanghwamun Square"],
         places: [
-            {n: "National Museum of Modern Art (7 min walk)", s: "Relaxed", c: "green", d: "Modern art exhibition hall.<br>🚶 Route: East Gate -> Samcheong-dong 400m"},
-            {n: "Seochon Village (10 min walk)", s: "Relaxed", c: "green", d: "Joseon-era residential area.<br>🚶 Route: West Gate -> Tongin-dong direction"},
-            {n: "Bukchon Hanok Village (15 min walk)", s: "Normal", c: "yellow", d: "Traditional residential area.<br>🚶 Route: Gwanghwamun Intersection -> North 800m"},
-            {n: "Gwanghwamun Square (5 min walk)", s: "Crowded", c: "red", d: "Central public square.<br>🚶 Route: South Gate -> South 300m"}
+            {n: "National Museum of Modern Art (7 min walk)", s: "Relaxed", c: "green", d: "A cultural art space where you can enjoy contemporary art exhibitions and creative works in the heart of the city.<br>🚶 Route: Exit through the East Gate, walk 400m towards Samcheong-dong."},
+            {n: "Seochon Village (10 min walk)", s: "Relaxed", c: "green", d: "A historic neighborhood filled with charming alleys, unique cafes, and artistic heritage from the Joseon Dynasty.<br>🚶 Route: Exit through the West Gate, cross toward Tongin-dong."},
+            {n: "Bukchon Hanok Village (15 min walk)", s: "Normal", c: "yellow", d: "A traditional residential area preserving classic Korean hanok houses, offering breathtaking scenic views.<br>🚶 Route: Head north from Gwanghwamun Intersection for about 800m."},
+            {n: "Gwanghwamun Square (5 min walk)", s: "Crowded", c: "red", d: "A wide open public square featuring statues of King Sejong and Admiral Yi Sun-sin, symbolizing Seoul's history.<br>🚶 Route: Exit through the South Gate and walk 300m south."}
         ],
         issued: "<p>My Queue Number</p><h1 style='color:#2C3E50;font-size:40px;margin:10px 0'>A-{N}</h1><p>Ahead in line: {T} teams (Est. {M} mins)</p>",
         badge_free: "Relaxed", badge_normal: "Normal", badge_crowded: "Crowded"
@@ -95,10 +95,10 @@ const d = {
         t_map_title: "🗺️ 周辺スポットの地図と混雑度",
         locs: ["景福宮 (現在地)", "国立現代美術館", "西村マウル", "北村韓屋マウル", "光化門広場"],
         places: [
-            {n: "国立現代美術館 (徒歩7分)", s: "余裕", c: "green", d: "現代美術展示館。<br>🚶 経路: 東門出口 -> 三清洞方面 400m"},
-            {n: "西村マウル (徒歩10分)", s: "余裕", c: "green", d: "朝鮮時代の一般住民の居住地。<br>🚶 経路: 西門出口 -> 通仁洞方面"},
-            {n: "北村韓屋マウル (徒歩15分)", s: "普通", c: "yellow", d: "伝統的な居住地。<br>🚶 経路: 光化門三叉路 -> 北へ800m"},
-            {n: "光化門広場 (徒歩5分)", s: "混雑", c: "red", d: "中心広場。<br>🚶 経路: 南門出口 -> 南へ300m"}
+            {n: "国立現代美術館 (徒歩7分)", s: "余裕", c: "green", d: "都心の中で様々な同時代の現代美術作品や展示を鑑賞できる文化芸術空間です。<br>🚶 経路: 東門出口を出て三清洞方面へ約400m直進後、右側に位置。"},
+            {n: "西村マウル (徒歩10分)", s: "余裕", c: "green", d: "朝鮮時代の中人が居住していた歴史深い町で、趣のある路地や個性的なカフェが立ち並んでいます。<br>🚶 経路: 西門出口を出て通仁洞方面へ横断歩道を渡り路地へ進入。"},
+            {n: "北村韓屋マウル (徒歩15分)", s: "普通", c: "yellow", d: "伝統的な韓屋がそのまま保存されており、韓国伝統の美しい情緒と素晴らしい景色を満喫できます。<br>🚶 経路: 光化門三叉路から北側の坂道方向へ約800m移動。"},
+            {n: "光化門広場 (徒歩5分)", s: "混雑", c: "red", d: "世宗大王像と李舜臣将軍像が位置し、ソウルの歴史と文化を象徴する広々とした広場です。<br>🚶 経路: 南門出口を出て広場方面へ南へ300m直進。"}
         ],
         issued: "<p>私の待ち番号</p><h1 style='color:#2C3E50;font-size:40px;margin:10px 0'>A-{N}</h1><p>前の待ち組: {T}チーム (予想 {M}分)</p>",
         badge_free: "余裕", badge_normal: "普通", badge_crowded: "混雑"
@@ -137,12 +137,8 @@ function rnd() {
 }
 
 function iss() {
-    // 1부터 20 사이의 무작위 대기 번호 생성 (최대 20번)
     tkt = Math.floor(Math.random() * 20) + 1;
-    
-    // 대기 팀 수 설정
     let teams = tkt;
-    // 대기 번호 1번당 3분씩 비례 계산
     let minutes = teams * 3;
 
     let html = d[cur].issued
