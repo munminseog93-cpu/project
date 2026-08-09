@@ -66,7 +66,7 @@ const d = {
             {n: "북촌 한옥마을 (도보 15분)", s: "보통", c: "yellow", d: "전통 거주지.<br>🚶 경로: 광화문 삼거리 -> 북쪽 800m"},
             {n: "광화문 광장 (도보 5분)", s: "혼잡", c: "red", d: "중심 광장.<br>🚶 경로: 남문 출구 -> 남쪽 300m"}
         ],
-        issued: "<p>나의 대기 번호</p><h1 style='color:#2C3E50;font-size:40px;margin:10px 0'>A-{N}</h1><p>내 앞 대기: 18팀 (예상 36분)</p>",
+        issued: "<p>나의 대기 번호</p><h1 style='color:#2C3E50;font-size:40px;margin:10px 0'>A-{N}</h1><p>내 앞 대기: {T}팀 (예상 {M}분)</p>",
         badge_free: "여유", badge_normal: "보통", badge_crowded: "혼잡"
     },
     en: {
@@ -83,7 +83,7 @@ const d = {
             {n: "Bukchon Hanok Village (15 min walk)", s: "Normal", c: "yellow", d: "Traditional residential area.<br>🚶 Route: Gwanghwamun Intersection -> North 800m"},
             {n: "Gwanghwamun Square (5 min walk)", s: "Crowded", c: "red", d: "Central public square.<br>🚶 Route: South Gate -> South 300m"}
         ],
-        issued: "<p>My Queue Number</p><h1 style='color:#2C3E50;font-size:40px;margin:10px 0'>A-{N}</h1><p>Ahead in line: 18 teams (Est. 36 mins)</p>",
+        issued: "<p>My Queue Number</p><h1 style='color:#2C3E50;font-size:40px;margin:10px 0'>A-{N}</h1><p>Ahead in line: {T} teams (Est. {M} mins)</p>",
         badge_free: "Relaxed", badge_normal: "Normal", badge_crowded: "Crowded"
     },
     ja: {
@@ -100,7 +100,7 @@ const d = {
             {n: "北村韓屋マウル (徒歩15分)", s: "普通", c: "yellow", d: "伝統的な居住地。<br>🚶 経路: 光化門三叉路 -> 北へ800m"},
             {n: "光化門広場 (徒歩5分)", s: "混雑", c: "red", d: "中心広場。<br>🚶 経路: 南門出口 -> 南へ300m"}
         ],
-        issued: "<p>私の待ち番号</p><h1 style='color:#2C3E50;font-size:40px;margin:10px 0'>A-{N}</h1><p>前の待ち組: 18チーム (予想 36分)</p>",
+        issued: "<p>私の待ち番号</p><h1 style='color:#2C3E50;font-size:40px;margin:10px 0'>A-{N}</h1><p>前の待ち組: {T}チーム (予想 {M}分)</p>",
         badge_free: "余裕", badge_normal: "普通", badge_crowded: "混雑"
     }
 };
@@ -137,8 +137,20 @@ function rnd() {
 }
 
 function iss() {
-    tkt = Math.floor(Math.random() * 50) + 100;
-    document.getElementById('box').innerHTML = d[cur].issued.replace('{N}', tkt);
+    // 1부터 20 사이의 무작위 대기 번호 생성 (최대 20번)
+    tkt = Math.floor(Math.random() * 20) + 1;
+    
+    // 대기 팀 수 설정
+    let teams = tkt;
+    // 대기 번호 1번당 3분씩 비례 계산
+    let minutes = teams * 3;
+
+    let html = d[cur].issued
+        .replace('{N}', tkt)
+        .replace('{T}', teams)
+        .replace('{M}', minutes);
+
+    document.getElementById('box').innerHTML = html;
 }
 
 function toggleDetail(el) {
